@@ -19,6 +19,7 @@ jobs:
         registry-type: private
         registries: |
           767398088055.dkr.ecr.us-east-1.amazonaws.com
+        mask-password: true
 
     - name: Build Docker image
       run: docker build -t myapp .

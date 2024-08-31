@@ -18,7 +18,6 @@ jobs:
       with:
         registry-type: private
         mask-password: true
-        region: us-east-1  
         registries: |
           767398088055.dkr.ecr.us-east-1.amazonaws.com
 

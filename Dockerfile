@@ -22,11 +22,11 @@ FROM openjdk:17-jdk
 # Set the working directory
 WORKDIR /app
 
-# Copy the built JAR file from the build stage
-COPY --from=build /app/target/myapp.jar /app/myapp.jar
+# Copy the built WAR file from the build stage
+COPY --from=build /app/target/vprofile-v2.war /app/vprofile-v2.war
 
 # Expose port 8080
 EXPOSE 8080
 
 # Define the command to run the application
-CMD ["java", "-jar", "myapp.jar"]
+CMD ["java", "-jar", "vprofile-v2.war"]

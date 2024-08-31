@@ -6,10 +6,15 @@ WORKDIR /app
 
 # Copy the Maven project files
 COPY pom.xml .
+
+# Cache Maven dependencies
+RUN mvn dependency:go-offline
+
+# Copy source files
 COPY src /app/src
 
 # Build the application
-RUN mvn package
+RUN mvn package -DskipTests
 
 # Use an official OpenJDK image to run the application
 FROM openjdk:17-jdk
@@ -25,4 +30,3 @@ EXPOSE 8080
 
 # Define the command to run the application
 CMD ["java", "-jar", "myapp.jar"]
-

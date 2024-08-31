@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,27 +14,16 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Log in to Amazon ECR
-      id: ecr-login
       uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Build, tag, and push Docker image to ECR
-      run: |
-        docker build -t ${{ secrets.ECR_REPOSITORY_URI }}:latest .
-        docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
-
-    - name: Deploy to ECS
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: ecs-task-def.json
-        service: your-ecs-service-name
-        cluster: your-ecs-cluster-name
-        wait-for-service-stability: true
+        region: us-east-1
+        registry-type: private
+        docker-password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Run integration tests
-      run: |
-        curl -f http://your-application-url/health || exit 1
+    - name: Build Docker image
+      run: docker build -t myapp .
 
-    - name: Rollback on failure
-      if: failure()
+    - name: Push Docker image to ECR
       run: |
-        aws ecs update-service --cluster your-ecs-cluster-name --service your-ecs-service-name --force-new-deployment
+        docker tag myapp:latest 767398088055.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
+        docker push 767398088055.dkr.ecr.us-east-1.amazonaws.com/myapp:latest

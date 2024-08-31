@@ -16,15 +16,16 @@ jobs:
     - name: Log in to Amazon ECR
       uses: aws-actions/amazon-ecr-login@v2
       with:
-        registry-type: private
-        registries: |
-          767398088055.dkr.ecr.us-east-1.amazonaws.com
-        mask-password: true
+        registry-type: private  # Specify 'public' if using public ECR
+        region: us-east-1       # Specify the AWS region here
 
     - name: Build Docker image
       run: docker build -t myapp .
 
-    - name: Push Docker image to ECR
+    - name: Tag Docker image
       run: |
         docker tag myapp:latest 767398088055.dkr.ecr.us-east-1.amazonaws.com/ci-cd-repo:latest
+
+    - name: Push Docker image to ECR
+      run: |
         docker push 767398088055.dkr.ecr.us-east-1.amazonaws.com/ci-cd-repo:latest

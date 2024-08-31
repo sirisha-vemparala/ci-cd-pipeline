@@ -17,14 +17,13 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
       with:
         registry-type: private
+        registries: ${{ secrets.ECR_REPOSITORY_URI }}
         mask-password: true
-        registries: |
-          767398088055.dkr.ecr.us-east-1.amazonaws.com
 
     - name: Build Docker image
       run: docker build -t myapp .
 
     - name: Push Docker image to ECR
       run: |
-        docker tag myapp:latest 767398088055.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
-        docker push 767398088055.dkr.ecr.us-east-1.amazonaws.com/myapp:latest
+        docker tag myapp:latest ${{ secrets.ECR_REPOSITORY_URI }}:latest
+        docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
